@@ -5,8 +5,6 @@ export async function middleware(request: NextRequest) {
   const accessToken = cookies().get("accessToken")?.value;
   const pathname = new URL(request.nextUrl).pathname;
 
-  console.log('aaaaaaaaaaaaaa', pathname);
-
   if (!accessToken && pathname !== "/login") {
     return NextResponse.redirect(new URL('/login', request.nextUrl));
   }
