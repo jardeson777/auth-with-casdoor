@@ -4,23 +4,21 @@ import Image from "next/image";
 import BackgroundLogin from "../../../assets/background-login.png";
 import ImageLogin from "../../../assets/image-login.png";
 import LogoDocumentall from "../../../assets/logo-documentall-2.png";
-import * as z from "zod";
-import { useRouter } from "next/navigation";
 import { Button } from "../../../components/ui/button";
+import Sdk from "casdoor-js-sdk";
+import Link from "next/link";
 
-const formSchema = z.object({
-  email: z.string().email("Email inválido"),
-  password: z.string().min(8, "Senha deve ter no mínimo 8 caracteres"),
-});
+const config = {
+  serverUrl: "http://localhost:7001",
+  clientId: "25fa3767a0df1bf46fbc",
+  organizationName: "Documentall",
+  appName: "imobill",
+  redirectPath: "/api/login",
+};
 
-type FormSchema = z.infer<typeof formSchema>;
+const sdk = new Sdk(config);
 
 const LoginPage = () => {
-  const { replace } = useRouter();
-  const onSubmit = async (data: FormSchema) => {
-
-  };
-
   return (
     <main className="w-full min-h-screen flex flex-row">
       <section
@@ -30,7 +28,7 @@ const LoginPage = () => {
         }}
       >
         <div className="flex justify-center items-center w-full h-full">
-          <div className="flex flex-col gap-10 justify-center items-center bg-white bg-opacity-20 h-2/3 w-3/6 rounded-lg">
+          <div className="flex flex-col gap-10 justify-center items-center bg-black bg-opacity-20 h-2/3 w-3/6 rounded-lg">
             <Image src={ImageLogin} alt="login" width={300} />
             <p className="text-white font-medium text-lg">
               Seja bem-vindo!
@@ -44,9 +42,11 @@ const LoginPage = () => {
               <div className="w-full h-[1px] bg-white bg-opacity-45"></div>
             </div>
 
-            <Button className="p-5">
-              <Image alt="logo documentall" src={LogoDocumentall} width={120} />
-            </Button>
+            <Link href={sdk.getSigninUrl()}>
+              <Button className="p-5">
+                <Image alt="logo documentall" src={LogoDocumentall} width={120} />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
