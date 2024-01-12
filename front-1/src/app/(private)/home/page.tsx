@@ -20,6 +20,7 @@ const HomePage = async () => {
     headers: {
       'Content-Type': 'application/json',
     },
+    credentials: 'include',
     cache: 'no-cache',
   }).then((response) => response.json());
 
