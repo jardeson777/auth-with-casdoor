@@ -5,18 +5,7 @@ import BackgroundLogin from "../../../assets/background-login.png";
 import ImageLogin from "../../../assets/image-login.png";
 import LogoDocumentall from "../../../assets/logo-documentall-2.png";
 import { Button } from "../../../components/ui/button";
-import Link from "next/link";
-import Sdk from "casdoor-js-sdk";
-
-const config = {
-  serverUrl: "http://localhost:7001",
-  clientId: "2aff09046f21a5545ee4",
-  organizationName: "Documentall",
-  appName: "bitdox",
-  redirectPath: "/api/login",
-};
-
-const sdk = new Sdk(config);
+import { signIn } from "next-auth/react";
 
 const LoginPage = () => {
   return (
@@ -42,11 +31,13 @@ const LoginPage = () => {
               <div className="w-full h-[1px] bg-white bg-opacity-45"></div>
             </div>
 
-            <Link href={sdk.getSigninUrl()}>
-              <Button className="p-5">
-                <Image alt="logo documentall" src={LogoDocumentall} width={120} />
-              </Button>
-            </Link>
+            <Button className="p-5" onClick={() => {
+              signIn("keycloak", {
+                callbackUrl: "http://www.meulocal.com.br:5002/home",
+              })
+            }}>
+              <Image alt="logo documentall" src={LogoDocumentall} width={120} />
+            </Button>
           </div>
         </div>
       </section>

@@ -1,7 +1,4 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
-import { sdkBack } from "../../../lib/casdoor-back";
 
 type Product = {
   name: string;
@@ -22,19 +19,6 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const input = await request.json();
-  const token = cookies().get("accessToken");
-
-  if (!token) redirect("/login");
-
-  let jwtParsed = null;
-
-  try {
-    jwtParsed = sdkBack.parseJwtToken(token.value);
-  } catch (error) {
-    cookies().delete("accessToken");
-
-    return redirect("/login");
-  }
 
   await fetch("http://localhost:3333/product", {
     method: "POST",

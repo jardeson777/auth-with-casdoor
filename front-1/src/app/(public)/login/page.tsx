@@ -5,20 +5,11 @@ import BackgroundLogin from "../../../assets/background-login.png";
 import ImageLogin from "../../../assets/image-login.png";
 import LogoDocumentall from "../../../assets/logo-documentall-2.png";
 import { Button } from "../../../components/ui/button";
-import Sdk from "casdoor-js-sdk";
-import Link from "next/link";
-
-const config = {
-  serverUrl: "http://localhost:7001",
-  clientId: "25fa3767a0df1bf46fbc",
-  organizationName: "Documentall",
-  appName: "imobill",
-  redirectPath: "/api/login",
-};
-
-const sdk = new Sdk(config);
+import { signIn, useSession } from "next-auth/react";
 
 const LoginPage = () => {
+  const session = useSession();
+
   return (
     <main className="w-full min-h-screen flex flex-row">
       <section
@@ -42,11 +33,13 @@ const LoginPage = () => {
               <div className="w-full h-[1px] bg-white bg-opacity-45"></div>
             </div>
 
-            <Link href={sdk.getSigninUrl()}>
-              <Button className="p-5">
-                <Image alt="logo documentall" src={LogoDocumentall} width={120} />
-              </Button>
-            </Link>
+            <Button className="p-5" onClick={() => {
+              signIn("keycloak", {
+                callbackUrl: "http://localhost:5001/home",
+              });
+            }}>
+              <Image alt="logo documentall" src={LogoDocumentall} width={120} />
+            </Button>
           </div>
         </div>
       </section>

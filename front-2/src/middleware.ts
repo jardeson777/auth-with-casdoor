@@ -1,20 +1,25 @@
-import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
+import { withAuth } from "next-auth/middleware";
 
-export async function middleware(request: NextRequest) {
-  const accessToken = cookies().get("accessToken")?.value;
-  const pathname = new URL(request.nextUrl).pathname;
+export default withAuth(
+  async function middleware(params) {
+    const token = params.nextauth.token.accessToken;
+    const pathname = new URL(params.nextUrl).pathname;
 
-  if (!accessToken && pathname !== "/login") {
-    return NextResponse.redirect(new URL('/login', request.nextUrl));
+    if (!token && pathname !== "/login") {
+      return NextResponse.redirect(new URL('/login', params.nextUrl));
+    }
+
+    if (token && pathname === "/login" || token && pathname === "/") {
+      return NextResponse.redirect(new URL('/home', params.nextUrl));
+    }
+  },
+  {
+    pages: {
+      signIn: "/login",
+    }
   }
-
-  if (accessToken && pathname === "/login" || accessToken && pathname === "/") {
-    return NextResponse.redirect(new URL('/home', request.nextUrl));
-  }
-
-  return;
-}
+);
 
 export const config = {
   matcher: [
